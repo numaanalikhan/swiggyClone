@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Head (){
     var data = [
@@ -32,9 +33,11 @@ function Head (){
             <div className="w-[78%]  flex items-center justify-between gap-5">
                 
                 <div className="flex items-center gap-6">
-                    <img
-                    className="w-10 rounded-lg"
-                    src="https://play-lh.googleusercontent.com/ymXDmYihTOzgPDddKSvZRKzXkboAapBF2yoFIeQBaWSAJmC9IUpSPKgvfaAgS5yFxQ=w480-h960-rw"/>
+                    <Link to="/">
+                        <img
+                        className="w-10 rounded-lg"
+                        src="https://play-lh.googleusercontent.com/ymXDmYihTOzgPDddKSvZRKzXkboAapBF2yoFIeQBaWSAJmC9IUpSPKgvfaAgS5yFxQ=w480-h960-rw"/>
+                    </Link>
                     <p className="font-semibold border-b-2 border-black text-xs">Others</p>
                     <i className="fi fi-rs-angle-small-down mt-2 text-orange-500 text-2xl"></i>
                 </div>

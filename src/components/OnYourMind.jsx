@@ -1,20 +1,6 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react'
+import { useState } from "react"
 
-function OnYourMind() {
-    useEffect(() => {
-        axios
-          .get(
-    "https://www.swiggy.com/dapi/restaurants/list/v5?lat=17.406498&lng=78.47724389999999&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-          )
-          .then((res) => {
-            // console.log(
-            //   res?.data?.data?.cards[0]?.card?.card?.imageGridCards?.info
-            // );
-            setData(res?.data?.data?.cards[0]?.card?.card?.imageGridCards?.info);
-          });
-      }, [data]);
-      var [data, setData] = useState([]);
+function OnYourMind({data}) {
       var [value,setValue] = useState(0)
       const handleNext = ()=>{
         value >= 240 ? "" : setValue(prevStateValue=>prevStateValue + 80) 

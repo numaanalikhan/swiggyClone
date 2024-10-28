@@ -1,8 +1,9 @@
 
 import { useState } from 'react';
-import Card from './Card'
+import Card from './Card';
+import { Link } from 'react-router-dom';
 
-function TopResturants() {
+function TopResturants({data}) {
   
   
   const handlePrev = ()=>{
@@ -14,7 +15,7 @@ function TopResturants() {
     setValue(prevStateValue=> prevStateValue + 85)
   }  
   var [value,setValue] = useState(0)
-  console.log(value);
+  console.log(data);
   
   return (
     <div className='mt-8'>
@@ -34,9 +35,23 @@ function TopResturants() {
                 </div>
             </div>
         </div>
+        
+        <div
+        className="flex duration-1000 mt-4  w-full gap-4 "
+        style={{ transform: `translateX(-${value >= 430 ? "" : value}%)` }}
+      >
+        {data?.map((item) => {
+          return (
+           <>
+           <Link to="/restaurantMenu">
+             <Card item={item.info}/>
+           </Link>
+           </>  
+          )
+        })}
+      </div>
+        <hr className="border mt-8"/>
 
-       <Card value={value} setValue={setValue}/>
-       <hr className="border mt-8"/>
 
     </div>
   )

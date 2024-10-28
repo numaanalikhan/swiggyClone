@@ -1,49 +1,35 @@
-import axios from 'axios'
-import  {useState,useEffect} from 'react'
-function Card ({value,setValue}) {
-    useEffect(()=>{
-        axios.get(`https://www.swiggy.com/dapi/restaurants/list/v5?lat=17.406498&lng=78.47724389999999&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`)
-        .then((res)=>{
-            setData(res?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
-            console.log(res?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-            
-        })
-      },[])
-      var [data,setData] = useState([])
+import React from 'react'
 
+function Card({item}) {
+    const {id,cloudinaryImageId,aggregatedDiscountInfoV3,avgRating,sla,cuisines,locality,name} = item;
   return (
-    <div>
-         <div
-         className='flex duration-1000 mt-4  w-full gap-6'
-         style={{transform:`translateX(-${(value >=430 ?"":value)}%)`}}  >
-            {
-                data?.map((item)=>{
-                    const {id,cloudinaryImageId,name,avgRating,sla,cuisines}= item.info
-                    return(
-                        <div key={id}>
-                            <img 
-                            className=' min-w-[222px] h-[148px] object-cover rounded-xl'
-                             src= {`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/${cloudinaryImageId}`}
-                            />
-                            <p>{name}</p>
-                            <div className='flex items-center'>
-                                <div className='w-5 h-5 rounded-full bg-green-500 flex justify-center items-center'>
-                                    <i className=" text-sm fi fi-rr-star"></i>
-                                    </div>
-                                    <div className='mb-1'>
-                                        <span>{avgRating}</span>
-                                        <span>{sla.slaString}</span>
-                                    </div>
-                            </div>
-                                        <p>{cuisines.join(",").split(0,6)}...</p>
-                        </div>
-                    )
-                })
-            }
-        </div>
-    </div>
+    <>
+     <div key={id} className='hover:scale-90 duration-300'>
+            <div  className="min-w-[218px] h-[148px] relative ">
+                <img
+                  className=" w-full h-full object-cover rounded-2xl "
+                  src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/${cloudinaryImageId}`}
+                />
+                  <div className="w-full h-full absolute top-0 bg-gradient-to-t from-4% from-black to-50% rounded-2xl"></div>
+                 <p className="font-bold ml-4 mr-4 mb-2 text-white absolute bottom-0">{
+                  aggregatedDiscountInfoV3?.header && aggregatedDiscountInfoV3?.subHeader ? (aggregatedDiscountInfoV3?.header + " " + aggregatedDiscountInfoV3?.subHeader):""
+                  }</p>
+              </div>
 
+              <div className='ml-2 mt-2 '>
+                <h1 className='font-bold w-full line-clamp-1 text-[14px]'>{name}</h1>
+                <p className='flex items-center gap-2 text-[14px]'> 
+                  <i className=" fi fi-ss-circle-star text-green-500">  </i>
+                  <span className='mb-1'>{avgRating} </span>
+                  <span className='mb-1 font-semibold '>{sla?.slaString}</span>
+                </p>
+                <p className='text-gray-700 text-[14px] font-semibold line-clamp-1'>{cuisines.join(", ")}</p>
+                <p className='text-gray-700 text-[14px] font-semibold'>{locality}</p>
+                </div>
+
+            </div>
+    </>
   )
 }
 
-export default  Card;
+export default Card
