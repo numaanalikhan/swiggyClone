@@ -52,13 +52,11 @@ function OnlineFoodDelivery ({data}) {
       className='grid grid-cols-4 gap-5'
       >
         {
-          data.map((item)=>{
+          data.map(({info,cta:{link}})=>{
             return(
-              <>
-                <Link to="/restaurantMenu">
-                <Card item={item.info}/>
-                </Link>
-              </>
+             <>
+             <Card {...info} link={link}/>
+             </>
             )
           })
         }

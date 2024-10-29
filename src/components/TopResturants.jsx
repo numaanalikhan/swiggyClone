@@ -4,14 +4,14 @@ import Card from './Card';
 import { Link } from 'react-router-dom';
 
 function TopResturants({data}) {
-  
+  // var {data}= props
   
   const handlePrev = ()=>{
-    console.log("handlePrev fun is called");
+    // console.log("handlePrev fun is called");
     setValue(prevStateValue => prevStateValue -85)
   }  
   const handleNext = ()=>{
-    console.log("handleNext fun is called");
+    // console.log("handleNext fun is called");
     setValue(prevStateValue=> prevStateValue + 85)
   }  
   var [value,setValue] = useState(0)
@@ -40,13 +40,12 @@ function TopResturants({data}) {
         className="flex duration-1000 mt-4  w-full gap-4 "
         style={{ transform: `translateX(-${value >= 430 ? "" : value}%)` }}
       >
-        {data?.map((item) => {
+        {data?.map(({info,cta:{link}}) => {
+          // var {info , cta:{link}} = item
           return (
-           <>
-           <Link to="/restaurantMenu">
-             <Card item={item.info}/>
-           </Link>
-           </>  
+         <>
+         <Card {...info} link={link}/>
+         </>
           )
         })}
       </div>
