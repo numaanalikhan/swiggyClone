@@ -37,15 +37,14 @@ function TopResturants({data}) {
         </div>
         
         <div
-        className="flex duration-1000 mt-4  w-full gap-4 "
+        className="flex duration-1000 mt-4  w-full gap-6 "
         style={{ transform: `translateX(-${value >= 430 ? "" : value}%)` }}
       >
+        
         {data?.map(({info,cta:{link}}) => {
           // var {info , cta:{link}} = item
           return (
-         <>
-         <Card {...info} link={link}/>
-         </>
+         <Card key={info.id}{...info} link={link} width="228"/>
           )
         })}
       </div>

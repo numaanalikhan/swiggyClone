@@ -8,13 +8,16 @@ function Card(info) {
 // }
 // info is not our obje , info
 
-  const {id,cloudinaryImageId,aggregatedDiscountInfoV3,avgRating,sla,cuisines,locality,name,link} = info;
+  const {id,cloudinaryImageId,aggregatedDiscountInfoV3,avgRating,sla,cuisines,locality,name,link,width} = info;
   // console.log(link.split("/")[5].split("-").at(-1).slice(4));  `
   
   return (
-     <Link to={`/restaurantMenu/${link.split("/")[5]}`}>
-       <div key={id} className='hover:scale-90 duration-300'>
-              <div  className="min-w-[218px] h-[148px] relative ">
+     <Link to={`/restaurantMenu/${link.split("/")[5]}`}>  
+       <div key={id} className='hover:scale-90 duration-300 mt-5 mr-4'
+                     style={{width:`${width}px`}}>
+              <div  className={` h-[148px] relative`}
+                    style={{width:`${width}px`}}
+              >
                   <img
                     className=" w-full h-full object-cover rounded-2xl "
                     src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/${cloudinaryImageId}`}
@@ -24,7 +27,7 @@ function Card(info) {
                     aggregatedDiscountInfoV3?.header && aggregatedDiscountInfoV3?.subHeader ? (aggregatedDiscountInfoV3?.header + " " + aggregatedDiscountInfoV3?.subHeader):""
                     }</p>
                 </div>
-                <div className='ml-2 mt-2 '>
+                <div className='ml-4 mt-2  '>
                   <h1 className='font-bold w-full line-clamp-1 text-[14px]'>{name}</h1>
                   <p className='flex items-center gap-2 text-[14px]'>
                     <i className=" fi fi-ss-circle-star text-green-500">  </i>

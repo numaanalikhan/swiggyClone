@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 function OnlineFoodDelivery ({data}) {
   return (
-    <>
+    <div>
     <div className='mt-8'>
         <h1 className='text-black font-bold text-xl'>Restaurants with online food delivery in Hyderabad</h1>
     </div>
@@ -49,19 +49,17 @@ function OnlineFoodDelivery ({data}) {
     </div>
 
       <div
-      className='grid grid-cols-4 gap-5'
+      className='grid grid-cols-4 gap-2 mt-4'
       >
         {
           data.map(({info,cta:{link}})=>{
             return(
-             <>
-             <Card {...info} link={link}/>
-             </>
+              <Card key={info.id} {...info} link={link} width="198"/>
             )
           })
         }
       </div>
-    </>
+    </div>
   )
 }
 
