@@ -44,7 +44,7 @@ function TopResturants({data}) {
         {data?.map(({info,cta:{link}}) => {
           // var {info , cta:{link}} = item
           return (
-         <Card key={info.id}{...info} link={link} width="228"/>
+         <Card key={info.id}{...info} link={link} width="238"/>
           )
         })}
       </div>

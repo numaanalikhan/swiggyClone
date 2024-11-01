@@ -15,7 +15,7 @@ function Card(info) {
      <Link to={`/restaurantMenu/${link.split("/")[5]}`}>  
        <div key={id} className='hover:scale-90 duration-300 mt-5 mr-4'
                      style={{width:`${width}px`}}>
-              <div  className={` h-[148px] relative`}
+              <div  className={` h-[160px] relative`}
                     style={{width:`${width}px`}}
               >
                   <img

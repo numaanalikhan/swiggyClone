@@ -54,7 +54,7 @@ function OnlineFoodDelivery ({data}) {
         {
           data.map(({info,cta:{link}})=>{
             return(
-              <Card key={info.id} {...info} link={link} width="198"/>
+              <Card key={info.id} {...info} link={link} width="218"/>
             )
           })
         }
@@ -62,5 +62,9 @@ function OnlineFoodDelivery ({data}) {
     </div>
   )
 }
+
+
+
+
 
 export default OnlineFoodDelivery 
