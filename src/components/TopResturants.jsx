@@ -1,9 +1,10 @@
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Card from './Card';
 import { Link } from 'react-router-dom';
+import { Coordinates } from '../contextApi/context';
 
-function TopResturants({data}) {
+function TopResturants({data,title}) {
   // var {data}= props
   
   const handlePrev = ()=>{
@@ -15,12 +16,12 @@ function TopResturants({data}) {
     setValue(prevStateValue=> prevStateValue + 85)
   }  
   var [value,setValue] = useState(0)
-  console.log(data);
-  
+  // console.log(data);
+  var {titleName} = useContext(Coordinates)
   return (
     <div className='mt-8'>
         <div className='flex justify-between duration-1000]'>
-            <h1 className='text-xl font-bold'>Top resturant chains in Hyderabad</h1>
+            <h1 className='text-xl font-bold'>{title}</h1>
             <div className='flex gap-2 items-center'>
                 <div 
                 
@@ -41,8 +42,8 @@ function TopResturants({data}) {
         style={{ transform: `translateX(-${value >= 430 ? "" : value}%)` }}
       >
         
-        {data?.map(({info,cta:{link}}) => {
-          // var {info , cta:{link}} = item
+        {data?.map((item) => {
+          var {info , cta:{link}} = item
           return (
          <Card key={info.id}{...info} link={link} width="238"/>
           )

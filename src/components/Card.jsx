@@ -2,15 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 
 function Card(info) {
-// info {
-//   info,
-//   link
-// }
-// info is not our obje , info
-
   const {id,cloudinaryImageId,aggregatedDiscountInfoV3,avgRating,sla,cuisines,locality,name,link,width} = info;
-  // console.log(link.split("/")[5].split("-").at(-1).slice(4));  `
-  
   return (
      <Link to={`/restaurantMenu/${link.split("/")[5]}`}>  
        <div key={id} className='hover:scale-90 duration-300 mt-5 mr-4'
