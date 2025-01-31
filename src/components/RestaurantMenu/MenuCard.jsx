@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import DetailMenu from "../RestaurantMenu/DetailMenu";
+import { RestInfo } from "../../contextApi/context";
 
-function MenuCard({ card }) {
+function MenuCard({ card ,restInfo}) {
     // var {tit}=categories
     let isOpenCategory = false;
     if (card["@type"]) {
@@ -26,7 +27,7 @@ function MenuCard({ card }) {
                 `font-bold text-black text-` + (card["@type"] ? "xl" : "base")
               }
             >
-              {title} ({itemCards.length})
+              {title} ({itemCards?.length})
             </span>
             <i
               className={
@@ -35,7 +36,7 @@ function MenuCard({ card }) {
               }
             ></i>
           </div>
-          {isOpen && <DetailMenu itemCards={itemCards} />}
+          {isOpen && <DetailMenu itemCards={itemCards}  />}
         </>
       );
     } else {
@@ -47,7 +48,7 @@ function MenuCard({ card }) {
           {categories?.map((item) => {
             return (
               <>
-                <MenuCard card={item} />
+                <MenuCard card={item} restInfo={restInfo}/>
               </>
             );
           })}

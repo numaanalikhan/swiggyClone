@@ -1,25 +1,47 @@
-import { data } from "autoprefixer";
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Coordinates, Visibility } from "../../contextApi/context";
+import { CartContext, Coordinates, RestInfo} from "../../contextApi/context";
 import MenuCard from "../RestaurantMenu/MenuCard";
 import RestInfoCard from "../RestaurantMenu/RestInfoCard";
 import RestOffersCard from "../RestaurantMenu/RestOffersCard";
+// import { useSelector } from "react-redux";
 
 
 function RestaurantMenu() {
   var params = useParams();
   var id = params.id.split("-").at(-1).slice(4);
 
-  var [restInfo, setRestInfo] = useState([]);
   var [restOffers, setRestOffers] = useState([]);
   var [restMenu, setRestMenu] = useState([]);
   var [value, setValue] = useState(0);
   var [topPicks,setTopPicks] = useState(null);
   
   var {coord:{lat,lng}}= useContext(Coordinates)
-  var {visible}=useContext(Visibility)
+  var {cartData,setCartData} = useContext(CartContext)
+  // var cartData = useSelector((state)=>state.cartSlice.cartData)
+  var {restInfo,setRestInfo} = useContext(RestInfo)
+  // var restInfo = useSelector((state)=>{state.cartSlice.restInof})
+  
+  const handleAddToCart = (info)=>{
+    var isAddedToCart = cartData?.find(item=>item?.id === info?.id)
+    if(!isAddedToCart){
+      let getLocalStorageRestInfo = JSON.parse(localStorage.getItem("restInfo")) || []
+      if(getLocalStorageRestInfo.name===restInfo?.name || getLocalStorageRestInfo.length===0){
+        setCartData(prev=>[...prev,info]);
+        localStorage.setItem("cart",JSON.stringify([...cartData,info]));
+        localStorage.setItem("restInfo",JSON.stringify(restInfo));
+      }
+      else {
+        alert(`you are ordering from other restaurant`)
+      }
+     
+    }
+    else{
+      alert("item already existed")
+    }
+  }
+
   useEffect(() => {
     axios
       .get(
@@ -28,25 +50,29 @@ function RestaurantMenu() {
       .then((res) => {
       
         setRestInfo(res?.data?.data?.cards[2]?.card?.card?.info);
+        console.log(res?.data?.data?.cards[2]?.card?.card?.info);
+        
         setRestOffers(
           res?.data?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle
           ?.offers
         );
         
         let actualMenu =res?.data?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards;
-        setTopPicks(actualMenu?.filter((data)=>{
-          return(
-            data?.card?.card?.title === "Top Picks"
-          )
+      //   setTopPicks(actualMenu?.filter((data)=>{
+      //     return(
+      //       data?.card?.card?.title === "Top Picks"
+      //     )
           
-        })[0])
+      //   }
+      // )[0])
         // console.log(res?.data?.data?.cards[4]);
         setRestMenu(actualMenu.filter((data)=>{
           return(
             data?.card?.card?.itemCards || data?.card?.card?.categories
           )
         }))
-      })
+      }    
+    )
     },[]);
 
       
@@ -57,27 +83,27 @@ function RestaurantMenu() {
   const handleNext = () => {
     setValue((prevStateValue) => prevStateValue + 101);
   };
-  // const toogleFun = (index) => {
-  //   setCurrIdx(index === currIdx ? null : index);
-  // };
+  const toogleFun = (index) => {
+    setCurrIdx(index === currIdx ? null : index);
+  };
 
   return (
-    <div className="w-full mt-6 ">
+    <div className="w-full mt-5">
       <div className="w-[62%] mx-auto ">
         <p className="text-gray-400 text-[10px] font-semibold">
           <Link to="/">
             <span className="hover:text-gray-500">Home</span>
           </Link>{" "}
-          / <span className="hover:text-gray-500">{restInfo.city}</span> /{" "}
-          <span className="text-gray-500">{restInfo.name}</span>
+          / <span className="hover:text-gray-500">{restInfo?.city}</span> /{" "}
+          <span className="text-gray-500">{restInfo?.name}</span>
         </p>
-        <h1 className="font-bold text-xl mt-6">{restInfo.name}</h1>
+        <h1 className="font-bold text-xl mt-6">{restInfo?.name}</h1>
 
         <RestInfoCard {...restInfo} />
         <RestOffersCard
-          handleNext={handleNext}
-          handlePrev={handlePrev}
-          value={value}
+          // handleNext={handleNext}
+          // handlePrev={handlePrev}
+          // value={value}
           restOffers={restOffers}
         />
 
@@ -98,18 +124,39 @@ function RestaurantMenu() {
         </div>
         <hr className="mt-4 border" />
 
-       <h1>{topPicks?.card?.card?.title}</h1>
-       {
-        topPicks && 
-        topPicks.card.card.carousel.map((item)=>{
-          
-          var {dish:{info:{imageId,id}}} = item
-          return(
-              <img key={id} src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/${imageId}`}/>
-          )
-        })
-       }
-        <hr />
+          <h1>{topPicks?.card?.card?.title}</h1>
+         <div className="w-full flex gap-2 overflow-hidden mt-2 ">
+         {
+          topPicks &&
+          topPicks.card.card.carousel.map((item)=>{
+         
+            var {dish:{info}} = item
+            var {imageId,id} = info
+            return(
+              <div key={id} className=" min-w-[250px] h-[300px]  relative ">
+                <div className=" w-full h-full absolute z-10  bg-gradient-to-t  from-black/80  via-transparent  to-black/80 rounded-lg">
+                  <button 
+                   onClick={()=>{
+                    handleAddToCart(info)}
+                  }
+                   style={{
+                    top: '88%', // This positions the button 80% from the top of the container
+                    left: '70%', // This positions the button at 50% of the container's width (centered)
+                    transform: 'translate(-50%, -50%)', // This ensures the button is centered both vertically and horizontally
+                    width: '50%', // You can set the width as a percentage of the container's width
+                    height: '13%', // Set the height relative to the container's height
+                  }}
+                  className="absolute text-balance text-green-500 font-bold bg-white top-[250px] left-[160px] w-[120px] h-[32px] text-xl rounded-sm">Add</button>
+                  </div>
+                  <img
+                  className="w-full h-full object-cover rounded-lg"
+                  src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/${imageId}`}/>
+              </div>
+            )
+          })
+         }
+       </div>
+        <hr /> */}
 
        
 

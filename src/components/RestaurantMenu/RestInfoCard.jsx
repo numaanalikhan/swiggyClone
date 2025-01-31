@@ -13,7 +13,7 @@ function RestInfoCard({
           <div className="w-full h-full bg-white rounded-3xl p-4 border">
             <div className="flex gap-2 items-center font-bold ">
               <i className="fi fi-ss-circle-star text-green-500 mt-1"></i>
-              <span>{avgRatingString}</span>
+              <span>{avgRatingString} </span>
               <span>({totalRatingsString})</span>
               <span>{costForTwoMessage}</span>
             </div>

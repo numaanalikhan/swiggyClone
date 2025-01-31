@@ -1,28 +1,69 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { CartContext, RestInfo } from "../../contextApi/context";
+// import { useDispatch, useSelector } from "react-redux";
+// import { addToCart } from "../../utils/cartSlice";
 
 function DetailMenu ({ itemCards }) {
     let veg =
       "https://th.bing.com/th/id/OIP.u4Ean5n_ynRjwuny0C9EnQHaHa?rs=1&pid=ImgDetMain";
     let novVeg =
       "https://th.bing.com/th/id/OIP.SUHy0fBO5GnXnuZ-GRnrowHaHx?rs=1&pid=ImgDetMain";
-    return itemCards?.map((item, i) => {
-      
-      const {
-        card: {
-          info: {
-            name,
-            price,
-            imageId,
-            defaultPrice,
-            itemAttribute: { vegClassifier },
-            ratings: {
-              aggregatedRating: { rating, ratingCountV2 },
-            },
-          },
-        },
-      } = item;
-      
+      var {cartData,setCartData} = useContext(CartContext)
+      var {restInfo} = useContext(RestInfo);
+
+
+  //     var cartData = useSelector((state)=>{state.cartSlice.cartData});
+  //     var dispatch = useDispatch()
+
+  // var restInfo =  useSelector((state)=>{state.cartSlice.restInfo})
      
+
+      return itemCards?.map((item, i) => {
+        var {card:{info}} = item
+        info.restId= restInfo?.id;
+        info.restName=restInfo?.name;
+        const { name,
+                price,
+                imageId,
+                defaultPrice,
+                itemAttribute: { vegClassifier },
+                ratings: {
+                  aggregatedRating: { rating, ratingCountV2 },
+                },
+             } = info
+        
+      const handleAddToCart = ()=>{
+        var isAddedToCart = cartData?.find(item=>item?.id === info?.id)
+        let getLocalStorageRestInfo = JSON.parse(localStorage.getItem("restInfo")) || [];
+        if(!isAddedToCart){
+            if(getLocalStorageRestInfo?.name===restInfo?.name || getLocalStorageRestInfo.length===0){
+              setCartData(prev=>[...prev,info]);
+              localStorage.setItem("cart",JSON.stringify([...cartData,info]));
+              localStorage.setItem("restInfo",JSON.stringify(restInfo));
+            }
+            else {
+              alert(`want to clear previous restaurant items`)
+            }
+        }else{
+          alert(`item already existed`)
+        }
+
+
+
+
+      //   var sameRest = cartData.length>0 ? cartData.find(item=>item?.restName===info?.restName) : true
+      // if(!isAddedToCart  ){
+      //   if(sameRest){
+      //     setCartData(prev=>[...prev,info]);
+      //     localStorage.setItem("cart",JSON.stringify([...cartData,info]))
+      //   }
+      //   else alert(`want to clear previous restaurant items`)
+      // }
+      // else{
+      //   alert(`${info?.name} is already existed in Cart`)
+      // }
+      // console.log(info)
+      } 
       // var itemDescription = description ? description : "";
       return (
         <>
@@ -61,7 +102,9 @@ function DetailMenu ({ itemCards }) {
                 ""
               )}
   
-              <button className="hover:bg-slate-200 duration-100 text-green-600 font-extrabold text-sm w-[100px] h-[35px] rounded-xl  bg-white drop-shadow-xl absolute left-5 bottom-[-10px] ">
+              <button 
+              onClick={()=>{handleAddToCart()}}              
+              className="hover:bg-slate-200 duration-100 text-green-600 font-extrabold text-sm w-[100px] h-[35px] rounded-xl  bg-white drop-shadow-xl absolute left-5 bottom-[-10px] ">
                 ADD
               </button>
             </div>

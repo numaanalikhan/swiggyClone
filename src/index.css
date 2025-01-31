@@ -3,3 +3,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.filterBtn{
+    border:1px solid rgb(208, 203, 203);
+    padding:2px 12px;
+    border-radius: 30px;
+    /* box-shadow: 10px 10px gray; */
+}
+
+.active{
+    background-color: rgb(235, 235, 235);
+    border:1px solid;
+}
+.active i{
+    display: block;
+}
