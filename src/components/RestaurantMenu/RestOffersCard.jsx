@@ -40,14 +40,14 @@ function RestOffersCard({ handleNext, handlePrev, value, restOffers }) {
           </div>
         </div>
         <div className="flex gap-4 mt-4 overflow-hidden ">
-          {restOffers?.map((item) => {
+          {restOffers?.map((item,idx) => {
             var { restId, offerLogo, header, description } = item.info;
             return (
               <div
                 style={{
                   transform: `translateX(-${value <= 303 ? value : ""}%)`,
                 }}
-                key={restId}
+                key={idx}
                 className="min-w-[328px] border rounded-2xl flex gap-4 px-2 py-2 duration-1000"
               >
                 <img

@@ -1,35 +1,43 @@
-import React, { useContext } from 'react'
-import { CartContext } from '../contextApi/context'
-import { Link } from 'react-router-dom'
-// import { useDispatch, useSelector } from 'react-redux'
-// import { clearCart, remFromCart } from '../utils/cartSlice'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector,useDispatch } from 'react-redux';
+import { clearCart, deleteItem } from '../utils/cartSlice';
 
 function Cart() {
- 
-var {cartData,setCartData} = useContext(CartContext)
-// var cartData = useSelector((state)=>state.cartSlice.cartData);
-// var dispatch = useDispatch()
-console.log(cartData);
+const navigate = useNavigate()
+var cartData = useSelector((state)=>state.cartSlice.cartData);
+var userData = useSelector((state)=> state.signInSlice.userData)
+var dispatch = useDispatch()
 
  const handleClear = ()=>{
-//  dispatch(clearCart())
-  setCartData([])
-  localStorage.setItem("cart",JSON.stringify([]))
-  localStorage.setItem("restInfo",JSON.stringify([]))
- }
- const handleRemFromCart = (idx)=>{
-    if(cartData.length >0){
+   dispatch(clearCart())
+  }
+
+  const handleOrder = ()=>{
+    if(!userData){
+      navigate("/login")
+      alert("please login or signup")
+      return
+    }
+    else 
+    {
+      alert("order placed")
+      navigate("/")
+    }
+      
+  }
+  
+  const handleRemFromCart = (idx)=>{
+    if(cartData?.length >0){
       let dummyCartData = [...cartData]
       dummyCartData.splice(idx,1)
-      // dispatch(remFromCart())
-      setCartData(dummyCartData);
-      localStorage.setItem("cart",JSON.stringify(dummyCartData))
+      
+      dispatch(deleteItem(dummyCartData))
 
     }else handleClear()
 
-      // here we are creating a new refernce 
-      cartData.splice(idx,1);//directly updating the state it wont create a new refrence it just updates the items
-      setCartData(cartData)// set stae is used to for re rnedinring the comp...
+      // // here we are creating a new refernce 
+      // cartData.splice(idx,1);//directly updating the state it wont create a new refrence it just updates the items
+      // setCartData(cartData)// set stae is used to for re rnedinring the comp...
  }
  if(cartData.length<1) return(
    <>
@@ -51,15 +59,15 @@ console.log(cartData);
       <div className='w-[50%] mx-auto'>
         {
           cartData.map((item,i)=>{
-            console.log(item);
+            // console.log(item);
             totalPrice=totalPrice+(item?.defaultPrice||item?.price)/100
             return(
-              <>
+              <div key={i}>
                 <div  className='flex w-full justify-between my-5 p-2'>
                 <div className='w-[70%]'>
                   <h1 className="w-full text-3xl font-bold"> {item?.restName}</h1>
                   <h1 className='w-full text-2xl'>{item?.name}</h1>
-                  <p className='w-full text-3xl>'> {item?.defaultPrice/100||item?.price/100} </p>
+                  <p className='w-full text-3xl>'> {item?.defaultPrice/100 || item?.price/100} </p>
                 </div>
                 <div className='w-[30%] relative'>
                   <img className='rounded-xl aspect-square' src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/${item?.imageId}`}/>
@@ -71,11 +79,14 @@ console.log(cartData);
               </div>
 
               <hr/>
-              </>
+              </div>
             )
           })
         }
         <p>Total-र {Math.floor(totalPrice)}</p>
+        <button 
+        onClick={()=>{handleOrder()}}
+        className='w-[100px] h-8 rounded-sm mt-2 bg-green-600 text-white font-bold'>Place Order</button>
         <button 
         onClick={()=>{handleClear()}}
         className='w-[100px] h-8 rounded-sm mt-2 bg-green-400 text-white font-bold'>Clear Filter</button>

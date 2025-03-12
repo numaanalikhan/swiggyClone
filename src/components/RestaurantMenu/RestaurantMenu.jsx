@@ -19,17 +19,17 @@ function RestaurantMenu() {
   
   var {coord:{lat,lng}}= useContext(Coordinates)
   var {cartData,setCartData} = useContext(CartContext)
-  // var cartData = useSelector((state)=>state.cartSlice.cartData)
   var {restInfo,setRestInfo} = useContext(RestInfo)
-  // var restInfo = useSelector((state)=>{state.cartSlice.restInof})
   
   const handleAddToCart = (info)=>{
+    const updInfo = {...info,restName:restInfo.name}
+    console.log(updInfo);
     var isAddedToCart = cartData?.find(item=>item?.id === info?.id)
     if(!isAddedToCart){
       let getLocalStorageRestInfo = JSON.parse(localStorage.getItem("restInfo")) || []
       if(getLocalStorageRestInfo.name===restInfo?.name || getLocalStorageRestInfo.length===0){
-        setCartData(prev=>[...prev,info]);
-        localStorage.setItem("cart",JSON.stringify([...cartData,info]));
+        setCartData(prev=>[...prev,updInfo]);
+        localStorage.setItem("cart",JSON.stringify([...cartData,updInfo]));
         localStorage.setItem("restInfo",JSON.stringify(restInfo));
       }
       else {
@@ -49,8 +49,9 @@ function RestaurantMenu() {
       )
       .then((res) => {
       
+        
         setRestInfo(res?.data?.data?.cards[2]?.card?.card?.info);
-        console.log(res?.data?.data?.cards[2]?.card?.card?.info);
+        // console.log(res?.data?.data?.cards[2]?.card?.card?.info);
         
         setRestOffers(
           res?.data?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle
@@ -58,13 +59,15 @@ function RestaurantMenu() {
         );
         
         let actualMenu =res?.data?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards;
-      //   setTopPicks(actualMenu?.filter((data)=>{
-      //     return(
-      //       data?.card?.card?.title === "Top Picks"
-      //     )
+        // console.log(actualMenu);
+        
+        setTopPicks(actualMenu?.filter((data)=>{
+          return(
+            data?.card?.card?.title === "Top Picks"
+          )
           
-      //   }
-      // )[0])
+        }
+      )[0])
         // console.log(res?.data?.data?.cards[4]);
         setRestMenu(actualMenu.filter((data)=>{
           return(
@@ -88,7 +91,7 @@ function RestaurantMenu() {
   };
 
   return (
-    <div className="w-full mt-5">
+    <div className="w-full mt-5 relative">
       <div className="w-[62%] mx-auto ">
         <p className="text-gray-400 text-[10px] font-semibold">
           <Link to="/">
@@ -98,7 +101,6 @@ function RestaurantMenu() {
           <span className="text-gray-500">{restInfo?.name}</span>
         </p>
         <h1 className="font-bold text-xl mt-6">{restInfo?.name}</h1>
-
         <RestInfoCard {...restInfo} />
         <RestOffersCard
           // handleNext={handleNext}
@@ -128,13 +130,12 @@ function RestaurantMenu() {
          <div className="w-full flex gap-2 overflow-hidden mt-2 ">
          {
           topPicks &&
-          topPicks.card.card.carousel.map((item)=>{
-         
-            var {dish:{info}} = item
-            var {imageId,id} = info
+          topPicks.card.card.carousel.map((item,idx)=>{
+            var {dish:{info},creativeId} = item
+            // console.log(creativeId);
             return(
-              <div key={id} className=" min-w-[250px] h-[300px]  relative ">
-                <div className=" w-full h-full absolute z-10  bg-gradient-to-t  from-black/80  via-transparent  to-black/80 rounded-lg">
+                <div key={idx} className="w-full h-full  relative ">
+                <div className=" w-[384px] h-[395px] absolute z-10   rounded-lg">
                   <button 
                    onClick={()=>{
                     handleAddToCart(info)}
@@ -146,17 +147,18 @@ function RestaurantMenu() {
                     width: '50%', // You can set the width as a percentage of the container's width
                     height: '13%', // Set the height relative to the container's height
                   }}
-                  className="absolute text-balance text-green-500 font-bold bg-white top-[250px] left-[160px] w-[120px] h-[32px] text-xl rounded-sm">Add</button>
+                  className=" absolute text-balance text-green-500 font-bold bg-white top-[250px] left-[160px]  h-full text-lg rounded-md">Add</button>
                   </div>
                   <img
                   className="w-full h-full object-cover rounded-lg"
-                  src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/${imageId}`}/>
+                  src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_292,h_300/${creativeId}`}/>
               </div>
+             
             )
           })
          }
        </div>
-        <hr /> */}
+        <hr /> 
 
        
 
@@ -165,11 +167,11 @@ function RestaurantMenu() {
             card: { card },
           } = item;
           return (
-            <>
+            <div key={idx}>
               <MenuCard card={card} idx={idx} />
-
+              
               <hr className="border-[8px] border-gray-100 mb-4" />
-            </>
+            </div>
           );
         })}
       </div>

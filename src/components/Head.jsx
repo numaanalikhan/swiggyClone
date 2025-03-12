@@ -6,22 +6,30 @@ import { CartContext, Coordinates, Visibility } from "../contextApi/context";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
-import { toggleSearchBarAction } from "../utils/toogleSlice";//rdk
+import { loginToogleAction, toggleSearchBarAction } from "../utils/toogleSlice";//rdk
+import SignIn from "./SignIn";
 
 function Head() {
   var [locArr, setLocArr] = useState([]);
   // var { setVisible,visible } = useContext(Visibility);//useSelector//rdk
   var dispatch = useDispatch();//rdk
   var visible = useSelector((state)=>state.toogleSlice.searchBarToogle)//rdk
+  var loginToogle = useSelector((state)=>state.toogleSlice.loginToogle)
   // console.log(visible)//rdk
-  var {cartData} = useContext(CartContext);
+  const cartData =useSelector((state)=>{ return state.cartSlice.cartData})
   
+  const userData = useSelector((state)=>{ return state.signInSlice.userData})
+  
+  const handleLoginToogle = ()=>{
+    dispatch(loginToogleAction())
+  }
+
   const handleVisibility = () => {
     dispatch(toggleSearchBarAction())//rdk
     // setVisible((prev) => !prev);//need to use dispatch
-    setSearchLocation("");
-    setLocArr([]);
-    localStorage.setItem("key",JSON.stringify(...locArr))
+    // setSearchLocation("");
+    // setLocArr([]);
+    // localStorage.setItem("key",JSON.stringify(...locArr))
   };
   var [searchLocation, setSearchLocation] = useState("");
 
@@ -73,6 +81,7 @@ function Head() {
   }
   return (
     <div key={1} className={"sticky z-[1000] w-[100%] top-0"}>
+      {/*this is slide bar*/}
       <div className={" " + (visible ? "visible" : "invisible")}>
         <div
           onClick={handleVisibility}
@@ -84,6 +93,7 @@ function Head() {
             (visible ? "left-0" : "-left-[100%]")
           }
         >
+          {/*cursor*/}
           <div
             onClick={handleVisibility}
             className={
@@ -110,6 +120,7 @@ function Head() {
             </p>
           </div>
 
+            {/*api call*/}
           <div>
             {locArr.map((item,idx) => {
               var {
@@ -138,11 +149,39 @@ function Head() {
         </div>
       </div>
       {/* <SearchInput handleVisibility={handleVisibility} locArr={locArr} setLocArr={setLocArr} searchLocationFun={searchLocationFun} /> */}
+
+{/* this is for sign in slide bar option */}
+      <div className={" " + (loginToogle ? "visible" : "invisible")}>
+        <div
+            onClick={handleLoginToogle}
+            className="bg-black/50  w-full h-full fixed  z-40 "
+          ></div>
+          <div
+            className={
+              " w-[35%] h-full fixed z-50 duration-700 bg-white  overflow-y-scroll " +
+              (loginToogle ? "right-0" : "-right-[100%]")
+            }
+          >
+            {/*cursor*/}
+            <div
+              onClick={handleLoginToogle}
+              className={
+                "cursor-pointer w-10 h-10 ml-5 mt-5 flex items-center justify-center hover:bg-red-500"
+              }
+            >
+              <i className="fi fi-rr-cross hover:bg-red-400"></i>
+            </div>
+            <SignIn/>
+            </div>
+      </div>
+
+      {/*This is orignial navbar*/}
       <div
         className={
           "bg-white flex justify-center items-center  mx-auto px-5 pt-3 pb-2  border-b-2 shadow-lg "
         }
       >
+          {/* logo and navigation*/}
         <div className="w-[80%] h-full flex items-center justify-between gap-5 ">
           <div className="flex items-center gap-6 w-[1200px]">
             <Link to="/">
@@ -166,17 +205,32 @@ function Head() {
               </div>
             </div>
           </div>
+          
+          {/* NavBar*/}
           <div className="flex items-center gap-8">
             {data?.map((item, idx) => {
               return (
                 <div  key={idx}>
-                  <Link to={item?.path}>
-                    <div className="flex items-center justify-center gap-3">
+                 {
+                  item.name =="Sign in" ? (
+                    <div onClick={handleLoginToogle}>
+                    <div className="flex items-center justify-center gap-3 ">
+                     
+                          {userData ? <img className="w-[35px] h-[35px] rounded-full" src={userData?.photo}/>  :<i className={`fi ${item.image}`}></i>}    
+                              <p className="mb-1 font-semibold text-xs ">{userData ? userData?.name : item.name}</p>
+                    </div>
+                  </div>
+                  ):(
+                    <Link to={item?.path}>
+                    <div className="flex items-center justify-center gap-3 ">
                       <i className={`fi ${item.image}`}></i>
                       <p className="mb-1 font-semibold text-xs ">{item.name}</p>
-                      {item?.name=="Cart"&&<p className="mb-1">{<p className="font-bold text-green-700 shadow-lg bg-none">{cartData?.length>0?cartData?.length:""}</p>}</p>}
+                      {item?.name=="Cart"&&<span className="mb-1">{<p className="font-bold text-green-700 shadow-lg bg-none">{cartData?.length>0?cartData?.length:""}</p>}</span>}
+                      
                     </div>
                   </Link>
+                  )
+                 }
                 </div>
               );
             })}

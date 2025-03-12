@@ -31,3 +31,8 @@ export var data = [
         path:"/checkout"
     }
 ]
+
+
+
+  export let veg = "https://th.bing.com/th/id/OIP.u4Ean5n_ynRjwuny0C9EnQHaHa?rs=1&pid=ImgDetMain";
+  export let novVeg = "https://th.bing.com/th/id/OIP.SUHy0fBO5GnXnuZ-GRnrowHaHx?rs=1&pid=ImgDetMain";
